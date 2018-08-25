@@ -67,6 +67,12 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 
+    <uses-permission android:name="com.huawei.wallpaperservcie.permission.SET_WALLPAPER_OFFSET" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <application
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
         android:fullBackupOnly="true"
@@ -79,6 +85,10 @@
         android:largeHeap="@bool/config_largeHeap"
         android:restoreAnyVersion="true"
         android:supportsRtl="true" >
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
 
         <!--
         Main launcher activity. When extending only change the name, and keep all the
@@ -129,6 +139,17 @@
             android:theme="@style/SettingsTheme" />
 
         <activity
+            android:name="com.hdeva.launcher.IconPackListActivity"
+            android:autoRemoveFromRecents="true"
+            android:label="@string/available_icon_packs"
+            android:theme="@style/SettingsTheme" />
+
+        <activity
+            android:name="com.hdeva.launcher.IconPickerActivity"
+            android:autoRemoveFromRecents="true"
+            android:theme="@style/SettingsTheme" />
+
+        <activity
             android:name="com.hdeva.launcher.LeanTimeoutActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
@@ -142,7 +163,7 @@
         <provider
             android:name="com.android.launcher3.LauncherProvider"
             android:authorities="${applicationId}.settings"
-            android:exported="true"
+            android:exported="false"
             android:writePermission="${applicationId}.permission.WRITE_SETTINGS"
             android:readPermission="${applicationId}.permission.READ_SETTINGS" />
 

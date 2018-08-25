@@ -171,16 +171,17 @@ public class AllAppsQsbLayout extends AbstractQsbLayout implements SearchUiManag
 
     public void onClick(final View view) {
         super.onClick(view);
-        if (view == this) {
-            if (!Utilities.ATLEAST_NOUGAT) {
-                searchFallback();
-                return;
-            }
-            final ConfigBuilder f = new ConfigBuilder(this, true);
-            if (!mActivity.getGoogleNow().startSearch(f.build(), f.getExtras())) {
-                searchFallback();
-            }
-        }
+        searchFallback();
+//        if (view == this) {
+//            if (!Utilities.ATLEAST_NOUGAT) {
+//                searchFallback();
+//                return;
+//            }
+//            final ConfigBuilder f = new ConfigBuilder(this, true);
+//            if (!mActivity.getGoogleNow().startSearch(f.build(), f.getExtras())) {
+//                searchFallback();
+//            }
+//        }
     }
 
     protected void onDetachedFromWindow() {
@@ -189,7 +190,7 @@ public class AllAppsQsbLayout extends AbstractQsbLayout implements SearchUiManag
     }
 
     public void onExtractedColorsChanged(final WallpaperColorInfo wallpaperColorInfo) {
-        int color = Themes.getAttrBoolean(mActivity, R.attr.isMainColorDark) ? LeanSettings.isTopSearchBarDark(mActivity) ? R.color.qsb_dark_color : R.color.qsb_background_drawer_dark : R.color.qsb_background_drawer_default;
+        int color = LeanSettings.isTopSearchBarDark(mActivity) ? R.color.qsb_dark_color : Themes.getAttrBoolean(mActivity, R.attr.isMainColorDark) ? R.color.qsb_background_drawer_dark : R.color.qsb_background_drawer_default;
         bz(ColorUtils.compositeColors(ColorUtils.compositeColors(ContextCompat.getColor(mActivity, color), Themes.getAttrColor(mActivity, R.attr.allAppsScrimColor)), wallpaperColorInfo.getMainColor()));
     }
 

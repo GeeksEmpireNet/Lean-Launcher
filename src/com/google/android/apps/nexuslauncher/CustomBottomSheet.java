@@ -38,6 +38,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.widget.WidgetsBottomSheet;
+import com.hdeva.launcher.IconPackListActivity;
 import com.hdeva.launcher.LeanSettings;
 import com.hdeva.launcher.LeanUtils;
 
@@ -101,10 +102,11 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
         LeanUtils.reload(context);
     }
 
-    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
-        private final static String PREF_PACK = "pref_app_icon_pack";
+    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+        private static final String PREF_OVERRIDE_ICON = "pref_override_app_icon";
         private final static String PREF_HIDE = "pref_app_hide";
-        private SwitchPreference mPrefPack;
+
+        private Preference overrideIcon;
         private SwitchPreference mPrefHide;
 
         private ComponentKey mKey;
@@ -118,28 +120,29 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
         public void loadForApp(ItemInfo itemInfo) {
             mKey = new ComponentKey(itemInfo.getTargetComponent(), itemInfo.user);
 
-            mPrefPack = (SwitchPreference) findPreference(PREF_PACK);
+            overrideIcon = findPreference(PREF_OVERRIDE_ICON);
             mPrefHide = (SwitchPreference) findPreference(PREF_HIDE);
 
             Context context = getActivity();
-            CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(context);
+//            CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(context);
 
-            ComponentName componentName = itemInfo.getTargetComponent();
-            boolean enable = factory.packCalendars.containsKey(componentName) || factory.packComponents.containsKey(componentName);
-            mPrefPack.setEnabled(enable);
-            mPrefPack.setChecked(enable && CustomIconProvider.isEnabledForApp(context, mKey));
-            if (enable) {
-                PackageManager pm = context.getPackageManager();
-                try {
-                    mPrefPack.setSummary(pm.getPackageInfo(factory.iconPack, 0).applicationInfo.loadLabel(pm));
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+//            ComponentName componentName = itemInfo.getTargetComponent();
+//            boolean enable = factory.packCalendars.containsKey(componentName) || factory.packComponents.containsKey(componentName);
+//            mPrefPack.setEnabled(enable);
+//            mPrefPack.setChecked(enable && CustomIconProvider.isEnabledForApp(context, mKey));
+//            if (enable) {
+//                PackageManager pm = context.getPackageManager();
+//                try {
+//                    mPrefPack.setSummary(pm.getPackageInfo(factory.iconPack, 0).applicationInfo.loadLabel(pm));
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
             mPrefHide.setChecked(CustomAppFilter.isHiddenApp(context, mKey));
 
-            mPrefPack.setOnPreferenceChangeListener(this);
+//            mPrefPack.setOnPreferenceChangeListener(this);
+            overrideIcon.setOnPreferenceClickListener(this);
             mPrefHide.setOnPreferenceChangeListener(this);
         }
 
@@ -148,12 +151,24 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
             boolean enabled = (boolean) newValue;
             Launcher launcher = Launcher.getLauncher(getActivity());
             switch (preference.getKey()) {
-                case PREF_PACK:
-                    CustomIconProvider.setAppState(launcher, mKey, enabled);
-                    CustomIconUtils.reloadIconByKey(launcher, mKey);
-                    break;
+//                case PREF_PACK:
+//                    CustomIconProvider.setAppState(launcher, mKey, enabled);
+//                    CustomIconUtils.reloadIconByKey(launcher, mKey);
+//                    break;
                 case PREF_HIDE:
                     CustomAppFilter.setComponentNameState(launcher, mKey, enabled);
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            switch (preference.getKey()) {
+                case PREF_OVERRIDE_ICON:
+                    IconPackListActivity.openForComponent(getActivity(), mKey);
+                    break;
+                default:
                     break;
             }
             return true;

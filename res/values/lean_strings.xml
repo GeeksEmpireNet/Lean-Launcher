@@ -98,6 +98,7 @@
     <string name="double_tap_to_lock_disable_warning">By disabling admin access, you will not be able to use double tap to lock on your home screen.</string>
 
     <string name="icon_size_title">Icon size</string>
+    <string name="icon_text_size_title">Icon label size</string>
 
     <string name="icon_size_extra_small">Extra small (-25%)</string>
     <string name="icon_size_small">Small (-10%)</string>
@@ -123,9 +124,6 @@
 
     <string name="companion_app_permission_label">Lean companion permission</string>
     <string name="companion_app_permission_description">Permission to enforce signature protection for companion apps.</string>
-
-    <string name="reset_app_visibility_title">Reset app visibility</string>
-    <string name="reset_app_visibility_summary">When changing to default icon pack</string>
 
     <string name="companion_app_title">Companion app</string>
     <string name="companion_app_not_installed">Not installed</string>
@@ -178,15 +176,10 @@
 
     <string name="dark_bottom_search_title">Dark Google search bar</string>
     <string name="dark_top_search_title">Dark app search bar</string>
-    <string name="if_theme_is_dark">If theme is dark</string>
 
     <string name="hide_app_label_title">Hide app name</string>
     <string name="hide_app_label_on_desktop_summary">On the desktop</string>
     <string name="hide_app_label_on_all_apps_summary">In your app drawer</string>
-
-    <string name="reset_app_names_title">Reset app names</string>
-    <string name="reset_app_names_summary">To default</string>
-    <string name="reset_app_names_description">This will reset the name of all apps to their default.</string>
 
     <string name="tap_to_edit_app_name">Tap to edit app name</string>
     <string name="enter_new_app_name">Enter new app name</string>
@@ -274,5 +267,62 @@
 
     <string name="search_apps_caret_title">Search apps</string>
     <string name="search_apps_caret_summary">When long pressing caret</string>
+
+    <string name="override_app_icon">Override app icon</string>
+    <string name="available_icon_packs">Available icon packs</string>
+    <string name="custom_app_filter_hint">Search app icons&#8230;</string>
+    <string name="icon_pack_loading">Icon pack loading&#8230;</string>
+    <string name="applying_icon">Applying icon&#8230;</string>
+    <string name="clear_custom_icon">Clear custom icon</string>
+    <string name="custom_icon_cleared">Custom icon cleared!</string>
+    <string name="system_default">System default</string>
+
+    <string name="at_a_glance_summary">Weather, calendar events, etc</string>
+    <string name="feed_summary">Google Feed at a swipe</string>
+    <string name="search_summary">App and Google search</string>
+    <string name="look_and_feel_summary">Theme, grid sizes</string>
+    <string name="edit_apps_summary">App visibility, icons</string>
+    <string name="gestures_and_actions_summary">Swipe, double tap, etc</string>
+    <string name="shortcuts_summary">App shortcut visibility</string>
+    <string name="other_summary">General settings</string>
+    <string name="about_summary">Lean Launcher</string>
+
+    <string name="reset_category">Reset</string>
+    <string name="reset_app_names_title">Reset app names</string>
+    <string name="reset_app_names_summary">To default</string>
+    <string name="reset_app_names_description">This will reset the name of all apps to their default.</string>
+    <string name="reset_app_visibility_title">Reset app visibility</string>
+    <string name="reset_app_visibility_summary">To default</string>
+    <string name="reset_app_visibility_description">This will make all apps visible in your app drawer.</string>
+    <string name="reset_app_icons_title">Reset app icons</string>
+    <string name="reset_app_icons_summary">To system default</string>
+    <string name="reset_app_icons_description">This will reset all app icons to their system default.</string>
+
+    <string name="restarting">Restarting&#8230;</string>
+
+    <string name="date_format_title">Date format</string>
+
+    <string name="date_format_long_name">Long</string>
+    <string name="date_format_normal_name">Normal</string>
+    <string name="date_format_short_name">Short</string>
+
+    <string name="date_format_long">EEEEMMMMd</string>
+    <string name="date_format_normal">EEEEMMMd</string>
+    <string name="date_format_short">EEEMMMd</string>
+
+    <string-array name="date_format_names">
+        <item>@string/date_format_long_name</item>
+        <item>@string/date_format_normal_name</item>
+        <item>@string/date_format_short_name</item>
+    </string-array>
+
+    <string-array name="date_format_values">
+        <item>@string/date_format_long</item>
+        <item>@string/date_format_normal</item>
+        <item>@string/date_format_short</item>
+    </string-array>
+
+    <string name="show_page_indicator_title">Show page indicator</string>
+    <string name="show_page_indicator_summary">Using horizontal lines</string>
 
 </resources>

@@ -3,7 +3,10 @@ package com.hdeva.launcher;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+import android.util.Pair;
 
+import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 
 public class LeanSettings {
@@ -22,6 +25,7 @@ public class LeanSettings {
     public static final String FORCE_COLORED_G_ICON = "pref_colored_g_icon";
     public static final String DOUBLE_TAP_TO_LOCK = "pref_double_tap_to_lock";
     public static final String ICON_SIZE = "pref_icon_size";
+    public static final String ICON_TEXT_SIZE = "pref_icon_text_size";
     public static final String RESET_APP_VISIBILITY_ON_DEFAULT_ICON_PACK = "pref_reset_app_visibility_on_default_icon_pack";
     public static final String SEARCH_PROVIDER = "pref_search_provider";
     public static final String HOTSEAT_BACKGROUND = "pref_hotseat_background";
@@ -30,6 +34,8 @@ public class LeanSettings {
     public static final String LABEL_HIDDEN_ON_DESKTOP = "pref_label_hidden_on_desktop";
     public static final String LABEL_HIDDEN_ON_ALL_APPS = "pref_label_hidden_on_all_apps";
     public static final String RESET_APP_NAMES = "pref_reset_app_names";
+    public static final String RESET_APP_VISIBILITY = "pref_reset_app_visibility";
+    public static final String RESET_APP_ICONS = "pref_reset_app_icons";
     public static final String QSB_VOICE_ICON = "pref_qsb_voice_icon";
     public static final String HOME_ACTION = "pref_home_action";
     public static final String DOUBLE_TAP_TO_LOCK_IS_SECURE = "pref_double_tap_to_lock_is_secure";
@@ -46,6 +52,8 @@ public class LeanSettings {
     public static final String SHORTCUT_LOCKED_UNINSTALL = "pref_shortcut_locked_uninstall";
     public static final String SHORTCUT_LOCKED_EDIT = "pref_shortcut_locked_edit";
     public static final String CARET_LONG_PRESS = "pref_caret_long_press";
+    public static final String DATE_FORMAT = "pref_date_format";
+    public static final String PAGE_INDICATOR = "pref_page_indicator";
 
     private static final boolean SETTINGS_DIRTY_DEFAULT = false;
     private static final boolean LOCK_DESKTOP_DEFAULT = false;
@@ -61,6 +69,7 @@ public class LeanSettings {
     private static final boolean FORCE_COLORED_G_ICON_DEFAULT = false;
     private static final boolean DOUBLE_TAP_TO_LOCK_DEFAULT = false;
     private static final String ICON_SIZE_DEFAULT = "average";
+    private static final String ICON_TEXT_SIZE_DEFAULT = "average";
     private static final boolean RESET_APP_VISIBILITY_ON_DEFAULT_ICON_PACK_DEFAULT = true;
     private static final String SEARCH_PROVIDER_DEFAULT = "https://www.google.com";
     private static final String HOTSEAT_BACKGROUND_DEFAULT = "100";
@@ -83,10 +92,19 @@ public class LeanSettings {
     private static final boolean SHORTCUT_LOCKED_UNINSTALL_DEFAULT = false;
     private static final boolean SHORTCUT_LOCKED_EDIT_DEFAULT = false;
     private static final boolean CARET_LONG_PRESS_DEFAULT = true;
+    private static final int DATE_FORMAT_DEFAULT = R.string.date_format_normal;
+    private static final boolean PAGE_INDICATOR_DEFAULT = true;
 
     private static final String THEME_WALLPAPER = "wallpaper";
     private static final String THEME_LIGHT = "light";
     private static final String THEME_DARK = "dark";
+
+    public static final String SYSTEM_DEFAULT_ICON_KEY = "system_default_icon_key";
+    public static final CharSequence SYSTEM_DEFAULT_ICON_VALUE = "system_default_icon_key";
+    public static final String SYSTEM_DEFAULT_ICON_PACK = "system_default_icon_pack";
+    public static final int SYSTEM_DEFAULT_ICON_RES_ID = -10;
+    private static final String CUSTOM_ICON_PACK_KEY_TEMPLATE = "%s#pack";
+    private static final String CUSTOM_ICON_RES_KEY_TEMPLATE = "%s#res";
 
     public static boolean isLeanSettingsDirty(Context context) {
         return prefs(context).getBoolean(SETTINGS_DIRTY, SETTINGS_DIRTY_DEFAULT);
@@ -193,9 +211,18 @@ public class LeanSettings {
     }
 
     public static float getIconSizeModifier(Context context) {
-        String saved = prefs(context).getString(ICON_SIZE, ICON_SIZE_DEFAULT);
+        String modifier = prefs(context).getString(ICON_SIZE, ICON_SIZE_DEFAULT);
+        return translateModifier(modifier);
+    }
+
+    public static float getIconTextSizeModifier(Context context) {
+        String modifier = prefs(context).getString(ICON_TEXT_SIZE, ICON_TEXT_SIZE_DEFAULT);
+        return translateModifier(modifier);
+    }
+
+    private static float translateModifier(String modifier) {
         float offset;
-        switch (saved) {
+        switch (modifier) {
             case "extrasmall":
                 offset = 0.75F;
                 break;
@@ -216,10 +243,6 @@ public class LeanSettings {
                 break;
         }
         return offset;
-    }
-
-    public static boolean shouldResetAppVisibility(Context context) {
-        return prefs(context).getBoolean(RESET_APP_VISIBILITY_ON_DEFAULT_ICON_PACK, RESET_APP_VISIBILITY_ON_DEFAULT_ICON_PACK_DEFAULT);
     }
 
     public static String getSearchProvider(Context context) {
@@ -327,6 +350,40 @@ public class LeanSettings {
 
     public static boolean shouldOpenAppSearchOnCaretLongPress(Context context) {
         return prefs(context).getBoolean(CARET_LONG_PRESS, CARET_LONG_PRESS_DEFAULT);
+    }
+
+    public static Pair<String, Integer> getCustomIcon(Context context, ComponentName forComponent) {
+        String iconPack = Utilities.getCustomIconPrefs(context).getString(String.format(CUSTOM_ICON_PACK_KEY_TEMPLATE, forComponent.flattenToString()), null);
+        int resId = Utilities.getCustomIconPrefs(context).getInt(String.format(CUSTOM_ICON_RES_KEY_TEMPLATE, forComponent.flattenToString()), 0);
+        return Pair.create(iconPack, resId);
+    }
+
+    public static void setCustomIcon(Context context, String forComponent, String iconPack, int iconResId) {
+        if (TextUtils.isEmpty(forComponent)) {
+            return;
+        }
+
+        ComponentName componentName = ComponentName.unflattenFromString(forComponent);
+
+        if (componentName != null) {
+            Utilities.getCustomIconPrefs(context)
+                    .edit()
+                    .putString(String.format(CUSTOM_ICON_PACK_KEY_TEMPLATE, componentName.flattenToString()), iconPack)
+                    .putInt(String.format(CUSTOM_ICON_RES_KEY_TEMPLATE, componentName.flattenToString()), iconResId)
+                    .apply();
+        }
+    }
+
+    public static void clearCustomIcons(Context context) {
+        Utilities.getCustomIconPrefs(context).edit().clear().apply();
+    }
+
+    public static String getDateFormat(Context context) {
+        return prefs(context).getString(DATE_FORMAT, context.getString(DATE_FORMAT_DEFAULT));
+    }
+
+    public static boolean isPageIndicatorVisible(Context context) {
+        return prefs(context).getBoolean(PAGE_INDICATOR, PAGE_INDICATOR_DEFAULT);
     }
 
     private static SharedPreferences prefs(Context context) {

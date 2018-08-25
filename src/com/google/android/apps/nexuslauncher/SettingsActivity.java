@@ -116,6 +116,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             findPreference(LeanSettings.HOTSEAT_ICONS).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.FORCE_COLORED_G_ICON).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.ICON_SIZE).setOnPreferenceChangeListener(this);
+            findPreference(LeanSettings.ICON_TEXT_SIZE).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.HOTSEAT_BACKGROUND).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.DARK_BOTTOM_SEARCH_BAR).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.DARK_TOP_SEARCH_BAR).setOnPreferenceChangeListener(this);
@@ -127,8 +128,11 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             findPreference(LeanSettings.GENERATE_ADAPTIVE_ICONS).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.GENERATED_ADAPTIVE_BACKGROUND).setOnPreferenceChangeListener(this);
             findPreference(LeanSettings.ALLOW_TWO_LINE_LABELS).setOnPreferenceChangeListener(this);
+            findPreference(LeanSettings.DATE_FORMAT).setOnPreferenceChangeListener(this);
 
             findPreference(LeanSettings.RESET_APP_NAMES).setOnPreferenceClickListener(this);
+            findPreference(LeanSettings.RESET_APP_VISIBILITY).setOnPreferenceClickListener(this);
+            findPreference(LeanSettings.RESET_APP_ICONS).setOnPreferenceClickListener(this);
             findPreference(RESTART_PREFERENCE).setOnPreferenceClickListener(this);
 
             if (SmartspaceController.get(mContext).cY()) {
@@ -199,6 +203,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                 case LeanSettings.GRID_ROWS:
                 case LeanSettings.HOTSEAT_ICONS:
                 case LeanSettings.ICON_SIZE:
+                case LeanSettings.ICON_TEXT_SIZE:
                     if (preference instanceof ListPreference) {
                         ((ListPreference) preference).setValue((String) newValue);
                     }
@@ -207,6 +212,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
 
                 case LeanSettings.THEME_KEY:
                 case LeanSettings.HOTSEAT_BACKGROUND:
+                case LeanSettings.DATE_FORMAT:
                     if (preference instanceof ListPreference) {
                         ((ListPreference) preference).setValue((String) newValue);
                     }
@@ -294,6 +300,12 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                 case LeanSettings.RESET_APP_NAMES:
                     new ResetAppNamesDialog().show(getFragmentManager(), preference.getKey());
                     return true;
+                case LeanSettings.RESET_APP_VISIBILITY:
+                    new ResetAppVisibilityDialog().show(getFragmentManager(), preference.getKey());
+                    return true;
+                case LeanSettings.RESET_APP_ICONS:
+                    new ResetAppIconsDialog().show(getFragmentManager(), preference.getKey());
+                    return true;
                 case RESTART_PREFERENCE:
                     LeanUtils.restart(mContext);
                     return true;
@@ -333,6 +345,56 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                         public void onClick(DialogInterface dialog, int which) {
                             Utilities.getCustomAppNamePrefs(getActivity()).edit().clear().apply();
                             LeanUtils.reload(getActivity());
+                        }
+                    })
+                    .create();
+        }
+    }
+
+    public static class ResetAppVisibilityDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.reset_app_visibility_title)
+                    .setMessage(R.string.reset_app_visibility_description)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CustomAppFilter.resetAppFilter(getActivity());
+                            LeanUtils.reload(getActivity());
+                        }
+                    })
+                    .create();
+        }
+    }
+
+    public static class ResetAppIconsDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.reset_app_icons_title)
+                    .setMessage(R.string.reset_app_icons_description)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ProgressDialog applyingDialog = ProgressDialog.show(getActivity(),
+                                    null /* title */,
+                                    getActivity().getString(R.string.state_loading),
+                                    true /* indeterminate */,
+                                    false /* cancelable */);
+
+                            LeanSettings.clearCustomIcons(getActivity());
+                            CustomIconUtils.setCurrentPack(getActivity(), "");
+                            CustomIconUtils.applyIconPackAsync(getActivity());
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    applyingDialog.cancel();
+                                }
+                            }, 1000);
                         }
                     })
                     .create();

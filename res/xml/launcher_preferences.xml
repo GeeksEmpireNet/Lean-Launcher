@@ -32,6 +32,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_assistant_no_shadow"
         android:key="pref_smartspace_screen"
+        android:summary="@string/at_a_glance_summary"
         android:title="@string/at_a_glance_category">
 
         <SwitchPreference
@@ -40,6 +41,15 @@
             android:persistent="true"
             android:summary="@string/smartspace_preferences_in_settings_desc"
             android:title="@string/smartspace_preferences_in_settings" />
+
+        <ListPreference
+            android:defaultValue="@string/date_format_normal"
+            android:entries="@array/date_format_names"
+            android:entryValues="@array/date_format_values"
+            android:key="pref_date_format"
+            android:persistent="true"
+            android:summary="%s"
+            android:title="@string/date_format_title" />
 
         <Preference
             android:key="pref_smartspace_settings"
@@ -72,6 +82,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_rss_feed_no_shadow"
         android:key="pref_feed_screen"
+        android:summary="@string/feed_summary"
         android:title="@string/feed_category">
 
         <SwitchPreference
@@ -96,6 +107,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_search_no_shadow"
         android:key="pref_search_screen"
+        android:summary="@string/search_summary"
         android:title="@string/search_category">
 
         <PreferenceCategory
@@ -173,6 +185,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_palette_no_shadow"
         android:key="pref_look_and_feel_screen"
+        android:summary="@string/look_and_feel_summary"
         android:title="@string/look_and_feel_category">
 
         <PreferenceCategory
@@ -199,14 +212,14 @@
                 android:defaultValue="false"
                 android:key="pref_dark_bottom_search_bar"
                 android:persistent="true"
-                android:summary="@string/if_theme_is_dark"
+                android:summary="@string/bottom_search_bar_summary"
                 android:title="@string/dark_bottom_search_title" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="pref_dark_top_search_bar"
                 android:persistent="true"
-                android:summary="@string/if_theme_is_dark"
+                android:summary="@string/top_search_bar_summary"
                 android:title="@string/dark_top_search_title" />
 
             <ListPreference
@@ -260,6 +273,15 @@
                 android:summary="%s"
                 android:title="@string/icon_size_title" />
 
+            <ListPreference
+                android:defaultValue="average"
+                android:entries="@array/icon_size_names"
+                android:entryValues="@array/icon_size_values"
+                android:key="pref_icon_text_size"
+                android:persistent="true"
+                android:summary="%s"
+                android:title="@string/icon_text_size_title" />
+
         </PreferenceCategory>
 
         <PreferenceCategory
@@ -273,6 +295,13 @@
                 android:summary="@string/show_caret_summary"
                 android:title="@string/show_caret_title" />
 
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="pref_page_indicator"
+                android:persistent="true"
+                android:summary="@string/show_page_indicator_summary"
+                android:title="@string/show_page_indicator_title" />
+
         </PreferenceCategory>
 
     </PreferenceScreen>
@@ -280,6 +309,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_edit_black_no_shadow"
         android:key="pref_edit_apps_screen"
+        android:summary="@string/edit_apps_summary"
         android:title="@string/edit_apps_category">
 
         <PreferenceCategory
@@ -312,11 +342,6 @@
                 android:summary="@string/hide_app_label_on_all_apps_summary"
                 android:title="@string/hide_app_label_title" />
 
-            <Preference
-                android:key="pref_reset_app_names"
-                android:summary="@string/reset_app_names_summary"
-                android:title="@string/reset_app_names_title" />
-
         </PreferenceCategory>
 
         <PreferenceCategory
@@ -340,13 +365,6 @@
                 android:title="@string/pref_icon_pack" />
 
             <SwitchPreference
-                android:defaultValue="true"
-                android:key="pref_reset_app_visibility_on_default_icon_pack"
-                android:persistent="true"
-                android:summary="@string/reset_app_visibility_summary"
-                android:title="@string/reset_app_visibility_title" />
-
-            <SwitchPreference
                 android:defaultValue="false"
                 android:key="pref_generate_adaptive_icons"
                 android:persistent="true"
@@ -359,6 +377,27 @@
                 android:persistent="true"
                 android:summary="@string/generate_adaptive_background_summary"
                 android:title="@string/generate_adaptive_background_title" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:key="pref_reset_category"
+            android:title="@string/reset_category">
+
+            <Preference
+                android:key="pref_reset_app_names"
+                android:summary="@string/reset_app_names_summary"
+                android:title="@string/reset_app_names_title" />
+
+            <Preference
+                android:key="pref_reset_app_visibility"
+                android:summary="@string/reset_app_visibility_summary"
+                android:title="@string/reset_app_visibility_title" />
+
+            <Preference
+                android:key="pref_reset_app_icons"
+                android:summary="@string/reset_app_icons_summary"
+                android:title="@string/reset_app_icons_title" />
 
         </PreferenceCategory>
 
@@ -380,6 +419,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_gesture_no_shadow"
         android:key="pref_gestures"
+        android:summary="@string/gestures_and_actions_summary"
         android:title="@string/gestures_and_actions">
 
         <PreferenceCategory
@@ -444,6 +484,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_shortcut_no_shadow"
         android:key="pref_shortcut_screen"
+        android:summary="@string/shortcuts_summary"
         android:title="@string/shortcuts_title">
 
         <PreferenceCategory
@@ -493,6 +534,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_dashboard_no_shadow"
         android:key="pref_other_screen"
+        android:summary="@string/other_summary"
         android:title="@string/other_category">
 
         <SwitchPreference
@@ -534,6 +576,7 @@
     <PreferenceScreen
         android:icon="@drawable/ic_info_outline_no_shadow"
         android:key="pref_about_screen"
+        android:summary="@string/about_summary"
         android:title="@string/about">
 
         <Preference
